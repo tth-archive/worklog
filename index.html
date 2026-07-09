@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#3A3F45">
 <title>WORKLOG DECK · 工時記錄機</title>
 <link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="工時記錄機">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -640,17 +642,18 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
 
 <script>
 /* ================= CONFIG ================= */
-const CONFIG = {
-  firebase: {
-    apiKey: "AIzaSyDOcs6oS6lSa8fz62MsFW8kmg2L_tmBj84",
-    authDomain: "worklog-deck.firebaseapp.com",
-    projectId: "worklog-deck",
-    storageBucket: "worklog-deck.firebasestorage.app",
-    messagingSenderId: "992602059091",
-    appId: "1:992602059091:web:8b83004035cf526f9b71a6"
+const CONFIG={
+  firebase:{
+    apiKey:"",            // ← 依「Firebase連動設定指南」貼上六個值;留空=純本機模式
+    authDomain:"",
+    projectId:"",
+    storageBucket:"",
+    messagingSenderId:"",
+    appId:""
   },
-  REMIND_AFTER_HOURS: 4
+  REMIND_AFTER_HOURS:6    // 開始時間填了超過幾小時沒收尾,就提醒
 };
+
 /* ================= 本機資料層 ================= */
 const KEY='worklog-deck-v2'; // 沿用 v2 資料
 const DRAFTKEY='worklog-form-draft';
@@ -1658,4 +1661,3 @@ initFirebase();
 </script>
 </body>
 </html>
-
