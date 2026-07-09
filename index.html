@@ -640,15 +640,17 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
 
 <script>
 /* ================= CONFIG ================= */
-const firebaseConfig = {
-  apiKey: "AIzaSyDOcs6oS6lSa8fz62MsFW8kmg2L_tmBj84",
-  authDomain: "worklog-deck.firebaseapp.com",
-  projectId: "worklog-deck",
-  storageBucket: "worklog-deck.firebasestorage.app",
-  messagingSenderId: "992602059091",
-  appId: "1:992602059091:web:8b83004035cf526f9b71a6"
+const CONFIG = {
+  firebase: {
+    apiKey: "AIzaSyDOcs6oS6lSa8fz62MsFW8kmg2L_tmBj84",
+    authDomain: "worklog-deck.firebaseapp.com",
+    projectId: "worklog-deck",
+    storageBucket: "worklog-deck.firebasestorage.app",
+    messagingSenderId: "992602059091",
+    appId: "1:992602059091:web:8b83004035cf526f9b71a6"
+  },
+  REMIND_AFTER_HOURS: 4
 };
-
 /* ================= 本機資料層 ================= */
 const KEY='worklog-deck-v2'; // 沿用 v2 資料
 const DRAFTKEY='worklog-form-draft';
