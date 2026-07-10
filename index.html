@@ -152,17 +152,19 @@ button:disabled{opacity:.5;cursor:default}
 .field{margin-bottom:13px}
 .field>label{display:block;font-family:'Chakra Petch',sans-serif;font-size:.6rem;letter-spacing:.16em;color:var(--ink-soft);margin-bottom:5px}
 input,select,textarea{
-  width:100%;font-family:'Noto Sans TC',sans-serif;font-size:16px;color:var(--ink);
+  width:100%;max-width:100%;font-family:'Noto Sans TC',sans-serif;font-size:16px;color:var(--ink);
   border:2px solid var(--cream-line);border-radius:9px;padding:10px 12px;background:#FFFDF6;
   box-shadow:var(--inset);min-height:44px;
+  /* iOS Safari:防止date/time原生輸入框撐破容器 */
+  -webkit-appearance:none;appearance:none;overflow:hidden;
 }
-textarea{resize:vertical}
+textarea{resize:vertical;overflow:auto}
 textarea.note{min-height:120px;line-height:1.7}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.row2>.field{min-width:0}
+.row2>.field{min-width:0;overflow:hidden}
 @media(max-width:420px){.row2{grid-template-columns:1fr}}
-.time-cell{display:flex;gap:6px;min-width:0}
-.time-cell input{flex:1;min-width:0}
+.time-cell{display:flex;gap:6px;min-width:0;overflow:hidden}
+.time-cell input{flex:1;min-width:0;width:0}
 .time-cell button{min-height:44px;padding:0 10px;font-size:.62rem;flex:none}
 .duration{
   min-height:24px;margin:2px 0 10px;display:flex;align-items:center;gap:8px;
@@ -368,11 +370,11 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
   <div class="faceplate">
     <div class="brand">
       <div class="logo">WORKLOG</div>
-      <div class="model">DECK · WL-06</div>
+      <div class="model">DECK · WL-08</div>
       <div class="rec"><span class="led" id="recLed"></span><span id="recText">STANDBY</span></div>
     </div>
     <div class="strip">
-      <h1>工時記錄機<small>TIME &amp; TOPIC TRACKER</small></h1>
+      <h1>工時記錄機<small>TIME &amp; PROJECT TRACKER</small></h1>
       <div class="auth-zone">
         <span class="sync-pill"><span class="led" id="syncLed"></span><span id="syncStatus">LOCAL</span></span>
         <button class="line" style="min-height:34px;padding:5px 12px;font-size:.68rem" id="authBtn" onclick="authAction()">登入同步</button>
@@ -435,15 +437,20 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
           </div>
         </div>
 
-        <div class="field"><label>TOPIC 主題資料夾</label>
+        <div class="field"><label>PROJECT 專案</label>
           <div class="folder-row">
             <select id="fFolder"></select>
             <button onclick="addFolder('fFolder')">＋新增</button>
-            <button onclick="openFolderMgr()" title="管理主題資料夾">⚙</button>
+            <button onclick="openFolderMgr()" title="管理專案">⚙</button>
           </div>
         </div>
 
-        <div class="field"><label>UNIT 事業體</label><div class="chips" id="fBu"></div></div>
+        <div class="field"><label>DEPARTMENT 部門(可複選)</label>
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <div class="chips" id="fBu" style="flex:1"></div>
+            <button onclick="openDeptMgr()" title="管理部門" style="flex:none;min-height:40px;padding:0 10px">⚙</button>
+          </div>
+        </div>
 
         <div class="field"><label>NOTE 小記 / 做了什麼</label>
           <textarea class="note" id="fDesc" placeholder="一句話也可以,想寫多也放得下。&#10;例:管理員審核流程頁面開發,踩到 DataCard 解鎖問題"></textarea>
@@ -553,8 +560,8 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
               <span><i style="background:#C43B2A"></i>緊急</span>
             </div>
           </div>
-          <div class="card"><h3>BY TOPIC 主題時數</h3><div id="chartFolder"></div></div>
-          <div class="card"><h3>BY UNIT 事業體時數</h3><div id="chartBu"></div></div>
+          <div class="card"><h3>BY PROJECT 專案時數</h3><div id="chartFolder"></div></div>
+          <div class="card"><h3>BY DEPARTMENT 部門時數</h3><div id="chartBu"></div></div>
         </div>
       </div>
 
@@ -602,10 +609,15 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
         <span class="chip" data-v="hd">例假·國定</span>
       </div>
     </div>
-    <div class="field"><label>TOPIC 主題資料夾</label>
+    <div class="field"><label>PROJECT 專案</label>
       <div class="folder-row"><select id="eFolder"></select><button onclick="addFolder('eFolder')">＋新增</button></div>
     </div>
-    <div class="field"><label>UNIT 事業體</label><div class="chips" id="eBu"></div></div>
+    <div class="field"><label>DEPARTMENT 部門(可複選)</label>
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div class="chips" id="eBu" style="flex:1"></div>
+        <button onclick="openDeptMgr()" title="管理部門" style="flex:none;min-height:40px;padding:0 10px">⚙</button>
+      </div>
+    </div>
     <div class="field"><label>NOTE 小記 / 做了什麼</label><textarea class="note" id="eDesc"></textarea></div>
     <div class="field"><label>SOURCE 來源性質</label>
       <div class="chips tag-chips" id="eTag">
@@ -623,18 +635,31 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
   </div>
 </div>
 
+<!-- 部門管理 -->
+<div class="modal-bg" id="deptMgrBg" onclick="if(event.target===this)closeDeptMgr()">
+  <div class="modal">
+    <h3>DEPARTMENT 部門管理</h3>
+    <div id="deptList"></div>
+    <div class="fm-hint">改名會同步更新所有相關記錄 · 有記錄的部門無法直接刪除,請先把記錄改到其他部門</div>
+    <div class="modal-actions">
+      <button class="line" onclick="addDept()">＋新增部門</button>
+      <button class="hot" onclick="closeDeptMgr()">完成</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
-<!-- 主題資料夾管理 -->
+<!-- 專案管理 -->
 <div class="modal-bg" id="folderMgrBg" onclick="if(event.target===this)closeFolderMgr()">
   <div class="modal">
-    <h3>主題資料夾管理</h3>
+    <h3>專案管理</h3>
     <div id="fmList"></div>
     <div class="fm-hint">
       點色圓可換色 · 「併入」會把該主題的所有記錄搬到你選的另一個主題,原主題移除 · 只有沒被使用的主題才能直接刪除 · 變更會同步到所有裝置
     </div>
     <div class="modal-actions">
-      <button class="line" onclick="addFolder('fFolder');renderFolderMgr()">＋新增主題</button>
+      <button class="line" onclick="addFolder('fFolder');renderFolderMgr()">＋新增專案</button>
       <button class="hot" onclick="closeFolderMgr()">完成</button>
     </div>
   </div>
@@ -642,22 +667,23 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
 
 <script>
 /* ================= CONFIG ================= */
-const CONFIG = {
-  firebase: {
-    apiKey: "AIzaSyDOcs6oS6lSa8fz62MsFW8kmg2L_tmBj84",
-    authDomain: "worklog-deck.firebaseapp.com",
-    projectId: "worklog-deck",
-    storageBucket: "worklog-deck.firebasestorage.app",
-    messagingSenderId: "992602059091",
-    appId: "1:992602059091:web:8b83004035cf526f9b71a6"
+const CONFIG={
+  firebase:{
+    apiKey:"AIzaSyDOcs6oS6lSa8fz62MsFW8kmg2L_tmBj84",
+    authDomain:"worklog-deck.firebaseapp.com",
+    projectId:"worklog-deck",
+    storageBucket:"worklog-deck.firebasestorage.app",
+    messagingSenderId:"992602059091",
+    appId:"1:992602059091:web:8b83004035cf526f9b71a6"
   },
-  REMIND_AFTER_HOURS: 4
+  REMIND_AFTER_HOURS:4
 };
+
 /* ================= 本機資料層 ================= */
 const KEY='worklog-deck-v2'; // 沿用 v2 資料
 const DRAFTKEY='worklog-form-draft';
 const FOLDER_COLORS=['#E8622D','#C43B2A','#F2B705','#3E7C4F','#4A6FA5','#8A5BA6','#B0722C','#3A8E8C'];
-let db={entries:[],deleted:[],folders:[],bus:['本事業體'],lastBu:null,lastFolder:null,salary:null,quotaWeekly:null,folderTombstones:[]};
+let db={entries:[],deleted:[],folders:[],depts:['BO'],lastDepts:['BO'],lastFolder:null,salary:null,quotaWeekly:null,folderTombstones:[]};
 
 function load(){
   try{const raw=localStorage.getItem(KEY);if(raw)db=Object.assign(db,JSON.parse(raw));}catch(e){}
@@ -666,13 +692,14 @@ function load(){
     if(v1&&!db.entries.length){
       const old=JSON.parse(v1);
       ['entries','deleted','folders','bus'].forEach(k=>{if(Array.isArray(old[k]))db[k]=old[k];});
-      db.lastBu=old.lastBu;db.lastFolder=old.lastFolder;
+      db.lastDepts=old.lastDepts||(old.lastBu?[old.lastBu]:['BO']);db.lastFolder=old.lastFolder;
     }
   }catch(e){}
   if(!Array.isArray(db.entries))db.entries=[];
   if(!Array.isArray(db.deleted))db.deleted=[];
   if(!Array.isArray(db.folders)||!db.folders.length)db.folders=[{id:'f-default',name:'一般',color:FOLDER_COLORS[0]}];
-  if(!Array.isArray(db.bus)||!db.bus.length)db.bus=['本事業體'];
+  if(!Array.isArray(db.depts)||!db.depts.length)db.depts=['BO'];
+  if(!Array.isArray(db.lastDepts)||!db.lastDepts.length)db.lastDepts=[db.depts[0]];
   if(!Array.isArray(db.folderTombstones))db.folderTombstones=[];
 }
 function persist(){
@@ -775,7 +802,7 @@ let restoringDraft=false;
 function formState(){
   return{
     date:fDate.value,start:fStart.value,end:fEnd.value,
-    type:getChip('fType'),otDay:getChip('fOtDay'),folderId:fFolder.value,bu:getChip('fBu'),
+    type:getChip('fType'),otDay:getChip('fOtDay'),folderId:fFolder.value,depts:getChips('fBu'),
     desc:fDesc.value,tag:getChip('fTag'),draft:fDraftBox.checked
   };
 }
@@ -799,7 +826,8 @@ function restoreDraft(){
     if(d.type)setChip('fType',d.type);
     if(d.otDay)setChip('fOtDay',d.otDay);
     if(d.folderId&&db.folders.some(f=>f.id===d.folderId))fFolder.value=d.folderId;
-    if(d.bu&&db.bus.includes(d.bu))setChip('fBu',d.bu);
+    if(d.depts)setChips('fBu',d.depts);
+    else if(d.bu)setChips('fBu',[d.bu]);
     fDesc.value=d.desc||'';
     if(d.tag)setChip('fTag',d.tag);
     fDraftBox.checked=!!d.draft;
@@ -820,7 +848,7 @@ function resetFormDefaults(){
   fStart.value='';fEnd.value='';fDesc.value='';
   setChip('fType','ot');setChip('fTag','adhoc');setChip('fOtDay','wd');
   fFolder.value=db.lastFolder&&db.folders.some(f=>f.id===db.lastFolder)?db.lastFolder:db.folders[0].id;
-  setChip('fBu',db.lastBu&&db.bus.includes(db.lastBu)?db.lastBu:db.bus[0]);
+  setChips('fBu',db.lastDepts.filter(b=>db.depts.includes(b)).length?db.lastDepts:[db.depts[0]]);
   fDraftBox.checked=false;
 }
 function clearForm(ask){
@@ -871,18 +899,39 @@ function chipsSelect(boxId,onChange){
     if(onChange)onChange(e.target.dataset.v);
   });
 }
+// 多選版(用於部門chips)
+function chipsMultiSelect(boxId,onChange){
+  const box=document.getElementById(boxId);
+  if(box._wired)return;box._wired=true;
+  box.addEventListener('click',e=>{
+    const chip=e.target.closest('.chip');
+    if(!chip||!chip.dataset.v||chip.classList.contains('add-chip'))return;
+    chip.classList.toggle('active');
+    if(onChange)onChange(getChips(boxId));
+  });
+}
 function setChip(boxId,v){
   document.querySelectorAll(`#${boxId} .chip`).forEach(c=>c.classList.toggle('active',c.dataset.v===v));
 }
 function getChip(boxId){return document.querySelector(`#${boxId} .chip.active`)?.dataset.v;}
+function getChips(boxId){return [...document.querySelectorAll(`#${boxId} .chip.active`)].map(c=>c.dataset.v).filter(Boolean);}
+function setChips(boxId,vals){
+  const set=new Set(vals);
+  document.querySelectorAll(`#${boxId} .chip`).forEach(c=>c.classList.toggle('active',set.has(c.dataset.v)));
+}
+function addChipValue(boxId,val){
+  const el=document.querySelector(`#${boxId} .chip[data-v="${val}"]`);
+  if(el)el.classList.add('active');
+}
 
 function renderBuChips(boxId){
   const box=document.getElementById(boxId);
-  const cur=getChip(boxId);
+  const cur=getChips(boxId);
+  box._wired=false; // 重建後重新綁定
   box.innerHTML='';
-  db.bus.forEach(bu=>{
+  db.depts.forEach(bu=>{
     const c=document.createElement('span');
-    c.className='chip'+(cur===bu?' active':'');
+    c.className='chip'+(cur.includes(bu)?' active':'');
     c.dataset.v=bu;c.textContent=bu;
     box.appendChild(c);
   });
@@ -890,17 +939,17 @@ function renderBuChips(boxId){
   add.className='chip add-chip';add.textContent='＋';
   add.onclick=e=>{
     e.stopPropagation();
-    const name=prompt('新增事業體名稱:');
-    if(name&&name.trim()&&!db.bus.includes(name.trim())){
-      db.bus.push(name.trim());persist();cloudPushMeta();
+    const name=prompt('新增部門名稱:');
+    if(name&&name.trim()&&!db.depts.includes(name.trim())){
+      db.depts.push(name.trim());persist();cloudPushMeta();
       renderBuChips('fBu');renderBuChips('eBu');
-      setChip(boxId,name.trim());
+      addChipValue(boxId,name.trim());
       if(boxId==='fBu')saveDraft();
     }
   };
   box.appendChild(add);
-  chipsSelect(boxId);
-  if(!getChip(boxId))setChip(boxId,db.bus[0]);
+  chipsMultiSelect(boxId,()=>{if(boxId==='fBu')saveDraft();});
+  if(!getChips(boxId).length)addChipValue(boxId,db.depts[0]);
 }
 function renderFolderSelects(){
   const opts=db.folders.map(f=>`<option value="${f.id}">${esc(f.name)}</option>`).join('');
@@ -928,7 +977,62 @@ function addFolder(selectId){
   toast(`已新增主題「${n}」`);
 }
 
-/* ================= 主題資料夾管理 ================= */
+/* ================= 部門管理 ================= */
+function openDeptMgr(){renderDeptMgr();document.getElementById('deptMgrBg').classList.add('show');}
+function closeDeptMgr(){document.getElementById('deptMgrBg').classList.remove('show');renderBuChips('fBu');renderBuChips('eBu');}
+function deptUseCount(name){return db.entries.filter(e=>(e.depts||[e.bu||'']).includes(name)).length;}
+function renderDeptMgr(){
+  const box=document.getElementById('deptList');
+  box.innerHTML=db.depts.map(d=>{
+    const cnt=deptUseCount(d);
+    return`<div class="fm-row">
+      <span class="fm-name">${esc(d)}<small>${cnt} 筆</small></span>
+      <button onclick="renameDept('${esc(d)}')">改名</button>
+      ${cnt===0&&db.depts.length>1?`<button class="danger" onclick="deleteDept('${esc(d)}')">刪除</button>`:''}
+    </div>`;
+  }).join('');
+}
+function addDept(){
+  const name=prompt('新增部門名稱:');
+  if(!name||!name.trim())return;
+  const n=name.trim();
+  if(db.depts.includes(n)){toast('已有同名部門');return;}
+  db.depts.push(n);persist();cloudPushMeta();
+  renderDeptMgr();renderBuChips('fBu');renderBuChips('eBu');
+  toast(`已新增部門「${n}」`);
+}
+function renameDept(old){
+  const name=prompt('部門新名稱:',old);
+  if(!name||!name.trim()||name.trim()===old)return;
+  const n=name.trim();
+  if(db.depts.includes(n)&&n!==old){toast('已有同名部門');return;}
+  db.depts=db.depts.map(d=>d===old?n:d);
+  const now=new Date().toISOString();
+  const changed=[];
+  db.entries.forEach(e=>{
+    if((e.depts||[e.bu||'']).includes(old)){
+      e.depts=(e.depts||[e.bu||'']).map(d=>d===old?n:d);
+      e.updatedAt=now;changed.push(e);
+    }
+  });
+  if(db.lastDepts)db.lastDepts=db.lastDepts.map(d=>d===old?n:d);
+  persist();cloudPushMeta();if(changed.length)cloudPushEntries(changed);
+  renderDeptMgr();renderBuChips('fBu');renderBuChips('eBu');
+  toast(`已改名為「${n}」,更新 ${changed.length} 筆記錄`);
+}
+function deleteDept(name){
+  if(deptUseCount(name)>0){toast('此部門還有記錄,無法刪除');return;}
+  if(!confirm(`刪除部門「${name}」?`))return;
+  db.depts=db.depts.filter(d=>d!==name);
+  if(db.lastDepts)db.lastDepts=db.lastDepts.filter(d=>d!==name);
+  if(!db.depts.length)db.depts=['BO'];
+  if(!db.lastDepts||!db.lastDepts.length)db.lastDepts=[db.depts[0]];
+  persist();cloudPushMeta();
+  renderDeptMgr();renderBuChips('fBu');renderBuChips('eBu');
+  toast('已刪除');
+}
+
+/* ================= 專案管理 ================= */
 let fmMergingId=null;
 function openFolderMgr(){fmMergingId=null;renderFolderMgr();document.getElementById('folderMgrBg').classList.add('show');}
 function closeFolderMgr(){document.getElementById('folderMgrBg').classList.remove('show');fmMergingId=null;renderAll();}
@@ -1024,13 +1128,13 @@ function saveFromForm(){
   if(!date){toast('請選日期');return;}
   const hours=calcHours(fStart.value,fEnd.value);
   if(hours==null||hours===0){toast('請確認開始與結束時間');return;}
-  const folderId=fFolder.value,bu=getChip('fBu')||db.bus[0];
-  db.lastFolder=folderId;db.lastBu=bu;
+  const folderId=fFolder.value,depts=getChips('fBu').length?getChips('fBu'):[db.depts[0]];
+  db.lastFolder=folderId;db.lastDepts=depts;
   const entry={
     id:uid(),date,start:fStart.value,end:fEnd.value,hours,
     type:getChip('fType')||'ot',otDay:getChip('fOtDay')||'wd',
     tag:getChip('fTag')||'adhoc',
-    folderId,bu,desc:fDesc.value.trim(),
+    folderId,depts,desc:fDesc.value.trim(),
     draft:fDraftBox.checked,
     updatedAt:new Date().toISOString()
   };
@@ -1052,7 +1156,7 @@ function openEditor(id){
   eDate.value=e.date;eStart.value=e.start;eEnd.value=e.end;
   setChip('eType',e.type||'ot');setChip('eTag',e.tag||'adhoc');
   setChip('eOtDay',e.otDay||'wd');toggleOtDay('e');
-  eFolder.value=e.folderId;setChip('eBu',e.bu||db.bus[0]);
+  eFolder.value=e.folderId;setChips('eBu',e.depts||[e.bu||db.depts[0]]);
   eDesc.value=e.desc||'';
   document.getElementById('eDraft').checked=!!e.draft;
   updateEDuration();
@@ -1068,7 +1172,7 @@ function saveFromEditor(){
     date:eDate.value,start:eStart.value,end:eEnd.value,hours,
     type:getChip('eType')||'ot',otDay:getChip('eOtDay')||'wd',
     tag:getChip('eTag')||'adhoc',
-    folderId:eFolder.value,bu:getChip('eBu')||db.bus[0],
+    folderId:eFolder.value,depts:getChips('eBu').length?getChips('eBu'):[db.depts[0]],
     desc:eDesc.value.trim(),
     draft:document.getElementById('eDraft').checked,
     updatedAt:new Date().toISOString()
@@ -1125,7 +1229,7 @@ function renderLog(){
             <span class="mark ${e.tag}">${TAGNAME[e.tag]||e.tag}</span>
             ${e.draft?'<span class="mark draft">未補完</span>':''}
           </div>
-          <div class="sys"><span class="fold" style="background:${f.color}">${esc(f.name)}</span><span class="bu">${esc(e.bu||'')}</span></div>
+          <div class="sys"><span class="fold" style="background:${f.color}">${esc(f.name)}</span><span class="bu">${esc((e.depts||[(e.depts||[e.bu||'']).join('; ')]).join(' · '))}</span></div>
           ${e.desc?`<div class="desc">${esc(e.desc)}</div>`:''}
         </div>
       </div>`;
@@ -1320,7 +1424,7 @@ function buildSummary(monthKey){
     const quota=r2(db.quotaWeekly*weeks);
     s+=`當月額度約 ${quota}h(${db.quotaWeekly}h/週),使用率 ${Math.round(tot/quota*100)}%。`;
   }
-  s+=`\n臨時交辦+緊急佔 ${adhocPct}%。投入前三主題:${top3}。`;
+  s+=`\n臨時交辦+緊急佔 ${adhocPct}%。投入前三專案:${top3}。`;
   const pay=hourlyWage()?calcPay(es).total:0;
   if(ot)s+=`\n加班費試算 ${hourlyWage()?money(pay):'(未設定月薪)'}。`;
   return s;
@@ -1375,7 +1479,7 @@ function renderAnalysis(){
   barChart('chartFolder',Object.entries(byF).map(([id,v])=>{
     const f=folderOf(id);return{label:f.name,value:v,color:f.color};
   }),'h');
-  const byB={};es.forEach(e=>{const b=e.bu||'—';byB[b]=(byB[b]||0)+e.hours;});
+  const byB={};es.forEach(e=>{(e.depts||[e.bu||'—']).forEach(b=>{byB[b]=(byB[b]||0)+e.hours;});});
   barChart('chartBu',Object.entries(byB).map(([b,v],i)=>({label:b,value:v,color:FOLDER_COLORS[(i+3)%FOLDER_COLORS.length]})),'h');
   renderSourceMonthly();
   let ts=db.entries;if(t)ts=ts.filter(e=>e.type===t);
@@ -1468,7 +1572,7 @@ function mergeData(incoming){
     }
   });
   if(db.lastFolder&&!db.folders.some(f=>f.id===db.lastFolder))db.lastFolder=db.folders[0].id;
-  (incoming.bus||[]).forEach(b=>{if(b&&!db.bus.includes(b))db.bus.push(b);});
+  (incoming.depts||incoming.bus||[]).forEach(b=>{if(b&&!db.depts.includes(b))db.depts.push(b);});
   if(incoming.salary>0&&!db.salary)db.salary=incoming.salary;
   if(incoming.quotaWeekly>0&&!db.quotaWeekly)db.quotaWeekly=incoming.quotaWeekly;
   return{added,updated};
@@ -1487,9 +1591,9 @@ function importJSON(ev){
 }
 function exportCSV(){
   if(!db.entries.length){toast('沒有記錄可匯出');return;}
-  const rows=[['日期','開始','結束','時數','性質','加班日別','主題','事業體','小記','來源','狀態']];
+  const rows=[['日期','開始','結束','時數','性質','加班日別','專案','部門','小記','來源','狀態']];
   [...db.entries].sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).forEach(e=>{
-    rows.push([e.date,e.start,e.end,e.hours,e.type==='ot'?'加班':'工作內',e.type==='ot'?(OTDAYNAME[e.otDay||'wd']):'',folderOf(e.folderId).name,e.bu||'',e.desc||'',TAGNAME[e.tag]||e.tag||'',e.draft?'未補完':'']);
+    rows.push([e.date,e.start,e.end,e.hours,e.type==='ot'?'加班':'工作內',e.type==='ot'?(OTDAYNAME[e.otDay||'wd']):'',folderOf(e.folderId).name,(e.depts||[e.bu||'']).join('; '),e.desc||'',TAGNAME[e.tag]||e.tag||'',e.draft?'未補完':'']);
   });
   const csv='\uFEFF'+rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\r\n');
   download(`工時記錄_${stamp2()}.csv`,csv,'text/csv;charset=utf-8');
@@ -1556,7 +1660,7 @@ async function cloudDeleteEntry(id){
 async function cloudPushMeta(){
   if(!cloudReady())return;
   try{
-    await metaDoc().set({folders:db.folders,bus:db.bus,deleted:db.deleted,folderTombstones:db.folderTombstones,salary:db.salary||null,quotaWeekly:db.quotaWeekly||null,updatedAt:new Date().toISOString()});
+    await metaDoc().set({folders:db.folders,depts:db.depts,deleted:db.deleted,folderTombstones:db.folderTombstones,salary:db.salary||null,quotaWeekly:db.quotaWeekly||null,updatedAt:new Date().toISOString()});
   }catch(err){console.error(err);}
 }
 async function cloudPushEntries(list){
@@ -1587,7 +1691,7 @@ async function fullSync(){
     const remoteMeta=ms.exists?ms.data():{};
     const snap=await entriesCol().get();
     const remoteEntries=[];snap.forEach(d=>remoteEntries.push(d.data()));
-    mergeData({entries:remoteEntries,deleted:remoteMeta.deleted||[],folders:remoteMeta.folders||[],bus:remoteMeta.bus||[],folderTombstones:remoteMeta.folderTombstones||[],salary:remoteMeta.salary,quotaWeekly:remoteMeta.quotaWeekly});
+    mergeData({entries:remoteEntries,deleted:remoteMeta.deleted||[],folders:remoteMeta.folders||[],depts:remoteMeta.depts||remoteMeta.bus||[],folderTombstones:remoteMeta.folderTombstones||[],salary:remoteMeta.salary,quotaWeekly:remoteMeta.quotaWeekly});
     persist();renderAll();
     const delSet=new Set(db.deleted.map(d=>d.id||d));
     for(const e of remoteEntries.filter(x=>delSet.has(x.id))){await entriesCol().doc(e.id).delete();}
