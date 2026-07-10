@@ -155,8 +155,14 @@ input,select,textarea{
   width:100%;max-width:100%;font-family:'Noto Sans TC',sans-serif;font-size:16px;color:var(--ink);
   border:2px solid var(--cream-line);border-radius:9px;padding:10px 12px;background:#FFFDF6;
   box-shadow:var(--inset);min-height:44px;
-  /* iOS Safari:防止date/time原生輸入框撐破容器 */
   -webkit-appearance:none;appearance:none;overflow:hidden;
+}
+/* checkbox 不套上面的 reset,恢復原生外觀與尺寸 */
+input[type="checkbox"]{
+  width:auto;max-width:none;min-height:auto;padding:0;border:none;border-radius:0;
+  background:none;box-shadow:none;overflow:visible;
+  -webkit-appearance:checkbox;appearance:checkbox;
+  flex:none;
 }
 textarea{resize:vertical;overflow:auto}
 textarea.note{min-height:120px;line-height:1.7}
