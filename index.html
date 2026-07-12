@@ -402,7 +402,7 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
   <div class="faceplate">
     <div class="brand">
       <div class="logo">WORKLOG</div>
-      <div class="model">DECK · WL-09</div>
+      <div class="model">DECK · WL-09B</div>
       <div class="rec"><span class="led" id="recLed"></span><span id="recText">STANDBY</span></div>
     </div>
     <div class="strip">
@@ -1083,12 +1083,19 @@ async function pasteNote(prefix){
 }
 // 共用:把含標記的整段文字拆進三個框
 function distributeNote(prefix,text){
-  const techM=text.match(/📋[^\n]*\n([\s\S]*?)(?=📝|📌|⏱|$)/);
-  const plainM=text.match(/📝[^\n]*\n([\s\S]*?)(?=📋|📌|⏱|$)/);
-  const listM=text.match(/📌[^\n]*\n([\s\S]*?)(?=📋|📝|⏱|$)/);
-  const tech=(techM?techM[1]:'').trim();
-  const plain=(plainM?plainM[1]:'').trim();
-  const list=(listM?listM[1]:'').trim();
+  // 以中文關鍵字為準,不依賴特定 emoji;同時容忍「---」分隔線
+  const HEAD=/(?:技術版|白話版|條列版|對話時間)/;
+  function grab(name){
+    const re=new RegExp('(?:^|\\n)[^\\n]*'+name+'[^\\n]*\\n([\\s\\S]*?)(?=\\n[^\\n]*(?:技術版|白話版|條列版|對話時間)[^\\n]*(?:\\n|$)|$)');
+    const m=text.match(re);
+    if(!m)return'';
+    // 去掉純分隔線與多餘空白
+    return m[1].split('\n').filter(l=>!/^[-—=\s]*$/.test(l)||l.trim()==='').join('\n')
+             .replace(/^[\s-]*|[\s-]*$/g,'').trim();
+  }
+  const tech=grab('技術版');
+  const plain=grab('白話版');
+  const list=grab('條列版');
   if(!tech&&!plain&&!list){
     document.getElementById(prefix+'DescTech').value=text.trim();
     setNoteTab(prefix,'tech');
@@ -1108,8 +1115,8 @@ function distributeNote(prefix,text){
     if(!el)return;
     el.addEventListener('paste',ev=>{
       const text=(ev.clipboardData||window.clipboardData)?.getData('text')||'';
-      const markers=(text.match(/📋|📝|📌/g)||[]).length;
-      if(markers>=2){ // 至少含兩個版本標記才視為完整小記
+      const markers=(text.match(/技術版|白話版|條列版/g)||[]).length;
+      if(markers>=2){ // 至少含兩個版本標題才視為完整小記
         ev.preventDefault();
         distributeNote(prefix,text);
       }
