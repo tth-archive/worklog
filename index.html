@@ -183,6 +183,15 @@ textarea.note{min-height:120px;line-height:1.7}
 }
 .paste-btn:hover{box-shadow:0 3px 0 var(--orange-deep)}
 .paste-btn:active{transform:translateY(2px);box-shadow:0 0 0 var(--orange-deep)}
+.entry .desc-wrap{margin-top:4px}
+.entry .desc-list{font-size:.83rem;color:var(--ink);white-space:pre-line;line-height:1.6;word-break:break-word}
+.entry .desc-toggle{font-size:.7rem;color:var(--orange);cursor:pointer;margin-top:4px;font-family:'Chakra Petch','Noto Sans TC',sans-serif;font-weight:600;display:inline-flex;align-items:center;gap:4px}
+.entry .desc-toggle::before{content:'▶';display:inline-block;transition:transform .15s}
+.entry .desc-toggle.open::before{transform:rotate(90deg)}
+.entry .desc-more{display:none;margin-top:6px;padding:8px 10px;background:#F4F0E5;border-radius:8px;border:1.5px dashed var(--cream-line)}
+.entry .desc-more.open{display:block}
+.entry .desc-label{font-size:.62rem;font-family:'Chakra Petch',sans-serif;letter-spacing:.12em;color:var(--ink-soft);margin-bottom:2px;margin-top:6px}
+.entry .desc-label:first-child{margin-top:0}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row2>.field{min-width:0;overflow:hidden}
 @media(max-width:420px){.row2{grid-template-columns:1fr}}
@@ -308,15 +317,6 @@ textarea.note{min-height:120px;line-height:1.7}
 .entry .fold{font-size:.7rem;font-family:'Chakra Petch','Noto Sans TC',sans-serif;font-weight:600;padding:2px 9px;border-radius:5px;color:#fff}
 .entry .bu{color:var(--ink-soft);font-size:.76rem}
 .entry .desc{font-size:.83rem;color:var(--ink-soft);margin-top:3px;word-break:break-word;line-height:1.6}
-.entry .desc-wrap{margin-top:4px}
-.entry .desc-list{font-size:.83rem;color:var(--ink);white-space:pre-line;line-height:1.6;word-break:break-word}
-.entry .desc-toggle{font-size:.7rem;color:var(--orange);cursor:pointer;margin-top:4px;font-family:'Chakra Petch','Noto Sans TC',sans-serif;font-weight:600;display:inline-flex;align-items:center;gap:4px}
-.entry .desc-toggle::before{content:'▶';display:inline-block;transition:transform .15s}
-.entry .desc-toggle.open::before{transform:rotate(90deg)}
-.entry .desc-more{display:none;margin-top:6px;padding:8px 10px;background:#F4F0E5;border-radius:8px;border:1.5px dashed var(--cream-line)}
-.entry .desc-more.open{display:block}
-.entry .desc-label{font-size:.62rem;font-family:'Chakra Petch',sans-serif;letter-spacing:.12em;color:var(--ink-soft);margin-bottom:2px;margin-top:6px}
-.entry .desc-label:first-child{margin-top:0}
 .empty{
   text-align:center;padding:38px 16px;color:var(--ink-soft);font-size:.88rem;line-height:2;
   border:2px dashed var(--cream-line);border-radius:14px;
@@ -423,9 +423,9 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="record" onclick="setDesktopTab('record">RECORD 記錄</button>
-    <button class="tab" data-tab="pay" onclick="setDesktopTab('pay">PAY 對帳</button>
-    <button class="tab" data-tab="analysis" onclick="setDesktopTab('analysis">ANALYSIS 分析</button>
+    <button class="tab active" data-tab="record" onclick="setDesktopTab('record')">RECORD 記錄</button>
+    <button class="tab" data-tab="pay" onclick="setDesktopTab('pay')">PAY 對帳</button>
+    <button class="tab" data-tab="analysis" onclick="setDesktopTab('analysis')">ANALYSIS 分析</button>
   </div>
 
   <div class="meters">
@@ -446,10 +446,10 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
 
         <div class="row2">
           <div class="field"><label>START 開始</label>
-            <div class="time-cell"><input type="time" id="fStart"><button onclick="setNow('fStart">NOW</button></div>
+            <div class="time-cell"><input type="time" id="fStart"><button onclick="setNow('fStart')">NOW</button></div>
           </div>
           <div class="field"><label>END 結束</label>
-            <div class="time-cell"><input type="time" id="fEnd"><button onclick="setNow('fEnd">NOW</button></div>
+            <div class="time-cell"><input type="time" id="fEnd"><button onclick="setNow('fEnd')">NOW</button></div>
           </div>
         </div>
         <div class="duration" id="fDuration"></div>
@@ -472,7 +472,7 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
         <div class="field"><label>PROJECT 專案</label>
           <div class="folder-row">
             <select id="fFolder"></select>
-            <button onclick="addFolder('fFolder">＋新增</button>
+            <button onclick="addFolder('fFolder')">＋新增</button>
             <button onclick="openFolderMgr()" title="管理專案">⚙</button>
           </div>
         </div>
@@ -486,7 +486,7 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
 
         <div class="field">
           <label>NOTE 小記</label>
-          <button class="paste-btn" onclick="pasteNote('f">⌘ 貼上 Claude 小記(自動分版)</button>
+          <button class="paste-btn" onclick="pasteNote('f')">⌘ 貼上 Claude 小記(自動分版)</button>
           <div class="note-tabs">
             <button class="note-tab active" onclick="switchNote('f','tech',this)">📋 技術版</button>
             <button class="note-tab" onclick="switchNote('f','plain',this)">📝 白話版</button>
@@ -617,10 +617,10 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
 
 <!-- 手機底部導覽 -->
 <nav class="bottom-nav" id="bottomNav">
-  <button data-view="form" class="active" onclick="setMobileView('form"><span class="ic">✎</span>記一筆</button>
-  <button data-view="log" onclick="setMobileView('log"><span class="ic">☰</span>記錄簿</button>
-  <button data-view="pay" onclick="setMobileView('pay"><span class="ic">$</span>對帳</button>
-  <button data-view="analysis" onclick="setMobileView('analysis"><span class="ic">▤</span>分析</button>
+  <button data-view="form" class="active" onclick="setMobileView('form')"><span class="ic">✎</span>記一筆</button>
+  <button data-view="log" onclick="setMobileView('log')"><span class="ic">☰</span>記錄簿</button>
+  <button data-view="pay" onclick="setMobileView('pay')"><span class="ic">$</span>對帳</button>
+  <button data-view="analysis" onclick="setMobileView('analysis')"><span class="ic">▤</span>分析</button>
 </nav>
 
 <!-- 編輯彈窗 -->
@@ -630,10 +630,10 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
     <div class="field"><label>DATE 日期</label><input type="date" id="eDate"></div>
     <div class="row2">
       <div class="field"><label>START 開始</label>
-        <div class="time-cell"><input type="time" id="eStart"><button onclick="setNow('eStart">NOW</button></div>
+        <div class="time-cell"><input type="time" id="eStart"><button onclick="setNow('eStart')">NOW</button></div>
       </div>
       <div class="field"><label>END 結束</label>
-        <div class="time-cell"><input type="time" id="eEnd"><button onclick="setNow('eEnd">NOW</button></div>
+        <div class="time-cell"><input type="time" id="eEnd"><button onclick="setNow('eEnd')">NOW</button></div>
       </div>
     </div>
     <div class="duration" id="eDuration"></div>
@@ -651,7 +651,7 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
       </div>
     </div>
     <div class="field"><label>PROJECT 專案</label>
-      <div class="folder-row"><select id="eFolder"></select><button onclick="addFolder('eFolder">＋新增</button></div>
+      <div class="folder-row"><select id="eFolder"></select><button onclick="addFolder('eFolder')">＋新增</button></div>
     </div>
     <div class="field"><label>DEPARTMENT 部門(可複選)</label>
       <div style="display:flex;gap:8px;align-items:flex-start">
@@ -661,7 +661,7 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
     </div>
     <div class="field">
       <label>NOTE 小記</label>
-      <button class="paste-btn" onclick="pasteNote('e">⌘ 貼上 Claude 小記(自動分版)</button>
+      <button class="paste-btn" onclick="pasteNote('e')">⌘ 貼上 Claude 小記(自動分版)</button>
       <div class="note-tabs">
         <button class="note-tab active" onclick="switchNote('e','tech',this)">📋 技術版</button>
         <button class="note-tab" onclick="switchNote('e','plain',this)">📝 白話版</button>
@@ -1032,22 +1032,39 @@ function addFolder(selectId){
   toast(`已新增主題「${n}」`);
 }
 
-/* ================= NOTE 分版切換 & 一鍵貼上 ================= */
+
+/* ================= NOTE 三版:顯示/切換/一鍵貼上 ================= */
+function renderEntryDesc(e){
+  const hasAny=e.descList||e.descTech||e.descPlain||e.desc;
+  if(!hasAny)return'';
+  let html='<div class="desc-wrap">';
+  const main=e.descList||e.descTech||e.desc||e.descPlain;
+  html+=`<div class="desc-list">${esc(main)}</div>`;
+  const extras=[];
+  if(e.descTech&&e.descTech!==main)extras.push(`<div class="desc-label">📋 技術版</div><div class="desc">${esc(e.descTech)}</div>`);
+  if(e.descPlain&&e.descPlain!==main)extras.push(`<div class="desc-label">📝 白話版</div><div class="desc">${esc(e.descPlain)}</div>`);
+  if(extras.length){
+    html+=`<div class="desc-toggle" onclick="event.stopPropagation();this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')"> 更多版本</div>`;
+    html+=`<div class="desc-more">${extras.join('')}</div>`;
+  }
+  html+='</div>';
+  return html;
+}
 function setNoteTab(prefix,tab){
   ['tech','plain','list'].forEach(t=>{
-    const p=document.getElementById(`${prefix}Note-${t}`);
+    const p=document.getElementById(prefix+'Note-'+t);
     if(p)p.classList.toggle('active',t===tab);
   });
-  const idx={tech:0,plain:1,list:2}[tab];
-  const panel=document.getElementById(`${prefix}Note-tech`);
+  const panel=document.getElementById(prefix+'Note-tech');
   if(!panel)return;
   const field=panel.closest('.field');
   if(!field)return;
+  const idx={tech:0,plain:1,list:2}[tab];
   field.querySelectorAll('.note-tab').forEach((b,i)=>b.classList.toggle('active',i===idx));
 }
 function switchNote(prefix,tab,btn){
   ['tech','plain','list'].forEach(t=>{
-    const p=document.getElementById(`${prefix}Note-${t}`);
+    const p=document.getElementById(prefix+'Note-'+t);
     if(p)p.classList.toggle('active',t===tab);
   });
   const field=btn.closest('.field');
@@ -1062,25 +1079,26 @@ async function pasteNote(prefix){
     }else{toast('⚠ 此瀏覽器不支援自動讀取剪貼簿,請手動貼上');return;}
   }catch(e){toast('⚠ 無法讀取剪貼簿,請確認已允許權限');return;}
   if(!text){toast('剪貼簿是空的');return;}
-  // 解析三個版本標記
-  const techM=text.match(/📋\s*技術版[^\n]*\n([\s\S]*?)(?=📝|📌|⏱|$)/);
-  const plainM=text.match(/📝\s*白話版[^\n]*\n([\s\S]*?)(?=📋|📌|⏱|$)/);
-  const listM=text.match(/📌\s*條列版[^\n]*\n([\s\S]*?)(?=📋|📝|⏱|$)/);
+  const techM=text.match(/📋[^\n]*\n([\s\S]*?)(?=📝|📌|⏱|$)/);
+  const plainM=text.match(/📝[^\n]*\n([\s\S]*?)(?=📋|📌|⏱|$)/);
+  const listM=text.match(/📌[^\n]*\n([\s\S]*?)(?=📋|📝|⏱|$)/);
   const tech=(techM?techM[1]:'').trim();
   const plain=(plainM?plainM[1]:'').trim();
   const list=(listM?listM[1]:'').trim();
   if(!tech&&!plain&&!list){
-    document.getElementById(`${prefix}DescTech`).value=text.trim();
+    document.getElementById(prefix+'DescTech').value=text.trim();
     setNoteTab(prefix,'tech');
-    toast('找不到版本標記,已貼入技術版');
+    toast('找不到版本標記,已整段貼入技術版');
   }else{
-    if(tech)document.getElementById(`${prefix}DescTech`).value=tech;
-    if(plain)document.getElementById(`${prefix}DescPlain`).value=plain;
-    if(list)document.getElementById(`${prefix}DescList`).value=list;
-    toast(`已自動填入${[tech&&'技術版',plain&&'白話版',list&&'條列版'].filter(Boolean).join('、')}`);
+    if(tech)document.getElementById(prefix+'DescTech').value=tech;
+    if(plain)document.getElementById(prefix+'DescPlain').value=plain;
+    if(list)document.getElementById(prefix+'DescList').value=list;
+    toast('已自動填入'+[tech&&'技術版',plain&&'白話版',list&&'條列版'].filter(Boolean).join('、'));
   }
   if(prefix==='f')saveDraft();
 }
+
+/* ================= 部門管理 ================= */
 function openDeptMgr(){renderDeptMgr();document.getElementById('deptMgrBg').classList.add('show');}
 function closeDeptMgr(){document.getElementById('deptMgrBg').classList.remove('show');renderBuChips('fBu');renderBuChips('eBu');}
 function deptUseCount(name){return db.entries.filter(e=>(e.depts||[e.bu||'']).includes(name)).length;}
@@ -1090,8 +1108,8 @@ function renderDeptMgr(){
     const cnt=deptUseCount(d);
     return`<div class="fm-row">
       <span class="fm-name">${esc(d)}<small>${cnt} 筆</small></span>
-      <button onclick="renameDept('${esc(d)}">改名</button>
-      ${cnt===0&&db.depts.length>1?`<button class="danger" onclick="deleteDept('${esc(d)}">刪除</button>`:''}
+      <button onclick="renameDept('${esc(d)}')">改名</button>
+      ${cnt===0&&db.depts.length>1?`<button class="danger" onclick="deleteDept('${esc(d)}')">刪除</button>`:''}
     </div>`;
   }).join('');
 }
@@ -1145,18 +1163,18 @@ function renderFolderMgr(){
   box.innerHTML=db.folders.map(f=>{
     const cnt=folderUseCount(f.id);
     let html=`<div class="fm-row">
-      <span class="fm-dot" style="background:${f.color}" title="換色" onclick="cycleFolderColor('${f.id}"></span>
+      <span class="fm-dot" style="background:${f.color}" title="換色" onclick="cycleFolderColor('${f.id}')"></span>
       <span class="fm-name">${esc(f.name)}<small>${cnt} 筆</small></span>
-      <button onclick="renameFolder('${f.id}">改名</button>
-      ${db.folders.length>1?`<button onclick="startMergeFolder('${f.id}">併入…</button>`:''}
-      ${cnt===0&&db.folders.length>1?`<button class="danger" onclick="deleteFolder('${f.id}">刪除</button>`:''}
+      <button onclick="renameFolder('${f.id}')">改名</button>
+      ${db.folders.length>1?`<button onclick="startMergeFolder('${f.id}')">併入…</button>`:''}
+      ${cnt===0&&db.folders.length>1?`<button class="danger" onclick="deleteFolder('${f.id}')">刪除</button>`:''}
     </div>`;
     if(fmMergingId===f.id){
       const others=db.folders.filter(x=>x.id!==f.id);
       html+=`<div class="fm-merge">
         把「${esc(f.name)}」的 ${cnt} 筆記錄搬到
         <select id="fmMergeTarget">${others.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')}</select>
-        <button class="hot" onclick="confirmMergeFolder('${f.id}">確認併入</button>
+        <button class="hot" onclick="confirmMergeFolder('${f.id}')">確認併入</button>
         <button class="line" onclick="fmMergingId=null;renderFolderMgr()">取消</button>
       </div>`;
     }
@@ -1241,7 +1259,7 @@ function saveFromForm(){
     descTech:document.getElementById('fDescTech').value.trim(),
     descPlain:document.getElementById('fDescPlain').value.trim(),
     descList:document.getElementById('fDescList').value.trim(),
-    desc:document.getElementById('fDescTech').value.trim()||document.getElementById('fDescList').value.trim()||document.getElementById('fDescPlain').value.trim(), // 向下相容
+    desc:document.getElementById('fDescTech').value.trim()||document.getElementById('fDescList').value.trim()||document.getElementById('fDescPlain').value.trim(),
     draft:fDraftBox.checked,
     updatedAt:new Date().toISOString()
   };
@@ -1329,7 +1347,7 @@ function renderLog(){
     html+=`<div class="month-title">${y}.${mo}<span class="sum">${tot} HR</span>${ot?`<span class="otsum">OT ${ot} HR</span>`:''}${pay}</div>`;
     arr.forEach(e=>{
       const f=folderOf(e.folderId);
-      html+=`<div class="entry" onclick="openEditor('${e.id}">
+      html+=`<div class="entry" onclick="openEditor('${e.id}')">
         <div class="side" style="background:${f.color}"></div>
         <div class="body">
           <div class="top">
@@ -1342,17 +1360,7 @@ function renderLog(){
             ${e.draft?'<span class="mark draft">未補完</span>':''}
           </div>
           <div class="sys"><span class="fold" style="background:${f.color}">${esc(f.name)}</span><span class="bu">${esc((e.depts||[(e.depts||[e.bu||'']).join('; ')]).join(' · '))}</span></div>
-          ${(e.descList||e.descTech||e.descPlain||e.desc)?`
-          <div class="desc-wrap">
-            ${e.descList?`<div class="desc desc-list">${esc(e.descList)}</div>`:''}
-            ${(e.descTech||e.descPlain)&&(e.descTech!==e.desc||e.descList)?`
-            <div class="desc-toggle" onclick="event.stopPropagation();this.nextElementSibling.classList.toggle('open');this.classList.toggle('open">▶ 更多版本</div>
-            <div class="desc-more">
-              ${e.descTech?`<div class="desc-label">📋 技術版</div><div class="desc">${esc(e.descTech)}</div>`:''}
-              ${e.descPlain?`<div class="desc-label">📝 白話版</div><div class="desc">${esc(e.descPlain)}</div>`:''}
-            </div>`:(!e.descList&&e.desc?`<div class="desc">${esc(e.desc)}</div>`:'')}
-          </div>`:''}
-
+          ${renderEntryDesc(e)}
         </div>
       </div>`;
     });
@@ -1469,7 +1477,7 @@ function renderPay(){
       const key=d.date+'|'+d.dayType;
       const open=payOpenDays.has(key);
       const wd=WEEKDAY[new Date(d.date+'T00:00:00').getDay()];
-      html+=`<tr class="pay-day${open?' open':''}" onclick="togglePayDay('${key}">
+      html+=`<tr class="pay-day${open?' open':''}" onclick="togglePayDay('${key}')">
         <td><span class="arrow">▶</span>${d.date.slice(5).replace('-','/')}(${wd})</td>
         <td>${OTDAYNAME[d.dayType]}</td>
         <td>${d.hours} hr</td>
@@ -1481,7 +1489,7 @@ function renderPay(){
           html+=`<tr class="pay-sub">
             <td></td>
             <td colspan="3">${e.start}–${e.end}(${e.hours}hr)· ${esc(folderOf(e.folderId).name)}${e.desc?' · '+esc(e.desc):''}</td>
-            <td><span class="edit-link" onclick="event.stopPropagation();openEditor('${e.id}">編輯</span></td>
+            <td><span class="edit-link" onclick="event.stopPropagation();openEditor('${e.id}')">編輯</span></td>
           </tr>`;
         });
       }
@@ -1882,7 +1890,6 @@ applyLayout();
 // 表單任何輸入都自動暫存
 document.getElementById('sec-form').addEventListener('input',()=>{updateFDuration();saveDraft();});
 document.getElementById('sec-form').addEventListener('change',()=>saveDraft());
-// Firebase 初始化獨立進行,失敗也不影響 App 本體(本機模式照常可用)
 Promise.resolve().then(initFirebase).catch(e=>{
   console.error('Firebase init failed:',e);
   setSync('LOCAL · 同步暫時無法使用','err');
