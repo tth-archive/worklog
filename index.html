@@ -402,7 +402,7 @@ footer{max-width:1080px;margin:14px auto 0;text-align:center;font-size:.66rem;co
   <div class="faceplate">
     <div class="brand">
       <div class="logo">WORKLOG</div>
-      <div class="model">DECK · WL-09B</div>
+      <div class="model">DECK · WL-09C</div>
       <div class="rec"><span class="led" id="recLed"></span><span id="recText">STANDBY</span></div>
     </div>
     <div class="strip">
@@ -1038,11 +1038,11 @@ function renderEntryDesc(e){
   const hasAny=e.descList||e.descTech||e.descPlain||e.desc;
   if(!hasAny)return'';
   let html='<div class="desc-wrap">';
-  const main=e.descList||e.descTech||e.desc||e.descPlain;
+  const main=e.descPlain||e.descList||e.descTech||e.desc; // 預設顯示白話版
   html+=`<div class="desc-list">${esc(main)}</div>`;
   const extras=[];
   if(e.descTech&&e.descTech!==main)extras.push(`<div class="desc-label">📋 技術版</div><div class="desc">${esc(e.descTech)}</div>`);
-  if(e.descPlain&&e.descPlain!==main)extras.push(`<div class="desc-label">📝 白話版</div><div class="desc">${esc(e.descPlain)}</div>`);
+  if(e.descList&&e.descList!==main)extras.push(`<div class="desc-label">📌 條列版</div><div class="desc">${esc(e.descList)}</div>`);
   if(extras.length){
     html+=`<div class="desc-toggle" onclick="event.stopPropagation();this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')"> 更多版本</div>`;
     html+=`<div class="desc-more">${extras.join('')}</div>`;
